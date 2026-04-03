@@ -196,11 +196,22 @@
     </div>
 
     <script>
-        // --- QUẢN LÝ GIAO DIỆN (THEME LOGIC) ---
+        // --- QUẢN LÝ GIAO DIỆN (THEME LOGIC CẢI TIẾN CHO MOBILE) ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
+        // Hàm an toàn để lấy/lưu thiết lập (Tránh lỗi văng script trên Zalo/Facebook Webview)
+        function getSavedTheme() {
+            try { return localStorage.getItem('color-theme'); } 
+            catch (e) { return null; }
+        }
+        function saveTheme(theme) {
+            try { localStorage.setItem('color-theme', theme); } 
+            catch (e) {}
+        }
+
+        // Hàm cập nhật giao diện trực quan
         function updateThemeUI(isDark) {
             if (isDark) {
                 document.documentElement.classList.add('dark');
@@ -213,28 +224,48 @@
             }
         }
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('color-theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
+        // Hàm gộp kiểm tra và áp dụng theme
+        function checkAndApplyTheme() {
+            const savedTheme = getSavedTheme();
             if (savedTheme) {
                 updateThemeUI(savedTheme === 'dark');
             } else {
                 updateThemeUI(systemPrefersDark.matches);
             }
+        }
 
-            systemPrefersDark.addEventListener('change', (e) => {
-                if (!localStorage.getItem('color-theme')) {
-                    updateThemeUI(e.matches);
+        function initTheme() {
+            checkAndApplyTheme();
+
+            // Lắng nghe đổi theme từ hệ thống (Hỗ trợ cả máy tính và thiết bị di động cũ)
+            const handleSystemChange = (e) => {
+                if (!getSavedTheme()) updateThemeUI(e.matches);
+            };
+
+            if (systemPrefersDark.addEventListener) {
+                systemPrefersDark.addEventListener('change', handleSystemChange);
+            } else if (systemPrefersDark.addListener) { // Cứu cánh cho Safari iOS cũ
+                systemPrefersDark.addListener(handleSystemChange);
+            }
+
+            // Khắc phục lỗi Mobile: Cập nhật lại giao diện ngay khi người dùng quay lại tab
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    checkAndApplyTheme();
                 }
             });
         }
 
-        themeToggleBtn.addEventListener('click', function() {
+        // Xử lý sự kiện nút bấm thủ công (hỗ trợ touch tốt hơn)
+        themeToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             const isDarkNow = document.documentElement.classList.contains('dark');
             const newTheme = !isDarkNow;
+            
             updateThemeUI(newTheme);
-            localStorage.setItem('color-theme', newTheme ? 'dark' : 'light');
+            saveTheme(newTheme ? 'dark' : 'light');
         });
 
         // --- QUẢN LÝ XEM ẢNH (MODAL LOGIC) ---
@@ -244,7 +275,7 @@
         function openModal(src) {
             modalImg.src = src;
             modal.classList.remove('hidden-modal');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Khóa cuộn trang khi xem ảnh
         }
 
         function closeModal() {
@@ -253,9 +284,13 @@
             setTimeout(() => { if(modal.classList.contains('hidden-modal')) modalImg.src = ''; }, 400);
         }
 
+        // Đóng modal khi chạm ra ngoài hoặc dùng phím
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        // Chạy khởi tạo
+        // Chạy khởi tạo ngay
         initTheme();
     </script>
 </body>
