@@ -105,7 +105,6 @@
     <div class="m3-bg-ornament shape-1"></div>
     <div class="m3-bg-ornament shape-2"></div>
 
-    <!-- Facebook Floating Button -->
     <div class="fixed bottom-6 right-6 z-[60] pointer-events-none">
         <a href="https://www.facebook.com/banh.cuon.nong.bich.cao/" target="_blank" class="pointer-events-auto bg-facebook-blue text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 animate-floating ripple">
             <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
@@ -114,7 +113,6 @@
         </a>
     </div>
 
-    <!-- Theme Switcher -->
     <div class="fixed top-4 right-4 z-50">
         <button id="theme-toggle" class="w-12 h-12 bg-white/80 dark:bg-black/20 rounded-2xl shadow-xl flex items-center justify-center backdrop-blur-md border border-white/20 ripple">
             <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15a5 5 0 100-10 5 5 0 000 10zM10 0a1 1 0 011 1v2a1 1 0 11-2 0V1a1 1 0 011-1zM10 17a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM3.515 3.515a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414L3.515 4.93a1 1 0 010-1.414zM13.657 13.657a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414l-1.414-1.414a1 1 0 010-1.414zM0 10a1 1 0 011-1h2a1 1 0 110 2H1a1 1 0 01-1-1zM17 10a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zM3.515 16.485a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414l-1.414 1.414a1 1 0 01-1.414 0zM13.657 6.343a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414L15.07 6.343a1 1 0 01-1.414 0z"></path></svg>
@@ -122,7 +120,6 @@
         </button>
     </div>
 
-    <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-4 py-12 md:py-20">
         <header class="flex flex-col items-center text-center mb-16">
             <div class="relative mb-8 cursor-pointer" onclick="openModal('856.jpg')">
@@ -134,7 +131,6 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-5 space-y-6">
-                <!-- Info Section -->
                 <div class="bg-white/40 dark:bg-white/5 rounded-m3-2xl p-4 border border-white/60 dark:border-white/10 m3-card m3-card-interactive shadow-sm">
                     <a href="https://www.google.com/maps/search/?api=1&query=15+Lê+Lợi+Đắk+Đoa+Gia+Lai" target="_blank" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all">
                         <div class="bg-m3-light-primary dark:bg-m3-dark-primary text-white p-3 rounded-xl">
@@ -156,7 +152,6 @@
                     </a>
                 </div>
 
-                <!-- Menu Section -->
                 <div class="bg-m3-light-primary-container/30 dark:bg-m3-dark-primary-container/10 rounded-m3-2xl p-6 border border-m3-light-primary/10 m3-card">
                     <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
                         <span class="w-1 h-6 bg-m3-light-primary rounded-full"></span> Thực Đơn
@@ -170,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- Photos Section -->
             <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div onclick="openModal('851.jpg')" class="sm:col-span-2 rounded-m3-2xl overflow-hidden shadow-xl cursor-zoom-in group border-2 border-white/20">
                     <img src="851.jpg" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
@@ -189,14 +183,11 @@
         </footer>
     </div>
 
-    <!-- Lightbox Modal -->
     <div id="image-modal" class="hidden-modal fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md cursor-zoom-out" onclick="closeModal()">
-        <!-- Close button (always visible and clickable) -->
         <button class="absolute top-6 right-6 text-white bg-white/10 p-3 rounded-full z-[110]" onclick="closeModal()">
             <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
         
-        <!-- Image with stopPropagation to prevent closing when clicked -->
         <div class="max-w-5xl max-h-[90vh] p-4 flex items-center justify-center">
             <img id="modal-img" src="" alt="Detail" 
                  class="max-w-full max-h-full rounded-2xl shadow-2xl cursor-default pointer-events-auto" 
@@ -205,29 +196,51 @@
     </div>
 
     <script>
+        // --- QUẢN LÝ GIAO DIỆN (THEME LOGIC) ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-        const modal = document.getElementById('image-modal');
-        const modalImg = document.getElementById('modal-img');
 
-        // Theme Logic
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            document.documentElement.classList.remove('dark');
-            themeToggleDarkIcon.classList.remove('hidden');
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('color-theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+            if (savedTheme) {
+                updateThemeUI(savedTheme === 'dark');
+            } else {
+                updateThemeUI(systemPrefersDark.matches);
+            }
+
+            systemPrefersDark.addEventListener('change', (e) => {
+                if (!localStorage.getItem('color-theme')) {
+                    updateThemeUI(e.matches);
+                }
+            });
         }
 
         themeToggleBtn.addEventListener('click', function() {
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            const isDarkNow = document.documentElement.classList.contains('dark');
+            const newTheme = !isDarkNow;
+            updateThemeUI(newTheme);
+            localStorage.setItem('color-theme', newTheme ? 'dark' : 'light');
         });
 
-        // Modal Logic
+        // --- QUẢN LÝ XEM ẢNH (MODAL LOGIC) ---
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-img');
+
         function openModal(src) {
             modalImg.src = src;
             modal.classList.remove('hidden-modal');
@@ -241,7 +254,9 @@
         }
 
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+        // Chạy khởi tạo
+        initTheme();
     </script>
 </body>
 </html>
-
