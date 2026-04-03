@@ -1,297 +1,249 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Bánh Cuốn Nóng Bích Cao - Đắk Đoa</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'm3-light-primary': '#9c4245',
-                        'm3-light-on-primary': '#ffffff',
-                        'm3-light-primary-container': '#ffdad9',
-                        'm3-light-on-primary-container': '#400208',
-                        'm3-light-surface': '#fffbff',
-                        'm3-light-on-surface': '#201a1a',
-                        'm3-light-surface-variant': '#f4dddd',
-                        'm3-light-outline': '#857372',
-                        'm3-dark-primary': '#ffb3b3',
-                        'm3-dark-on-primary': '#5f131b',
-                        'm3-dark-primary-container': '#7e2a2f',
-                        'm3-dark-on-primary-container': '#ffdad9',
-                        'm3-dark-surface': '#1a1111',
-                        'm3-dark-on-surface': '#ece0df',
-                        'm3-dark-surface-variant': '#534343',
-                        'm3-dark-outline': '#a08c8c',
-                        'facebook-blue': '#1877F2',
-                    },
-                    borderRadius: {
-                        'm3-xl': '28px',
-                        'm3-2xl': '32px',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Lexend', sans-serif;
-            transition: background-color 0.5s ease;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .m3-bg-ornament {
-            position: fixed;
-            z-index: -1;
-            filter: blur(80px);
-            border-radius: 100%;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
-        .shape-1 { width: 40vw; height: 40vw; top: -10vw; left: -10vw; background: #ffdad9; }
-        .dark .shape-1 { background: #5f131b; opacity: 0.3; }
-        .shape-2 { width: 35vw; height: 35vw; bottom: 5%; right: -5vw; background: #f4dddd; }
-        .dark .shape-2 { background: #7e2a2f; opacity: 0.2; }
 
-        .m3-card {
-            transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        
-        @media (min-width: 768px) {
-            .m3-card-interactive:hover {
-                transform: translateY(-8px) scale(1.01);
-                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
-            }
-        }
-
-        .ripple { position: relative; overflow: hidden; }
-        .ripple:active:after { content: ""; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(255,255,255,0.2); }
-
-        /* Lightbox Fix */
-        #image-modal {
-            transition: opacity 0.3s ease;
-            display: flex;
-        }
-        #modal-img {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .hidden-modal {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
-        .hidden-modal #modal-img {
-            transform: scale(0.8);
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .animate-floating { animation: floating 3s ease-in-out infinite; }
-    </style>
-</head>
-<body class="bg-m3-light-surface dark:bg-m3-dark-surface text-m3-light-on-surface dark:text-m3-dark-on-surface min-h-screen">
-
-    <div class="m3-bg-ornament shape-1"></div>
-    <div class="m3-bg-ornament shape-2"></div>
-
-    <div class="fixed bottom-6 right-6 z-[60] pointer-events-none">
-        <a href="https://www.facebook.com/banh.cuon.nong.bich.cao/" target="_blank" class="pointer-events-auto bg-facebook-blue text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 animate-floating ripple">
-            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-        </a>
-    </div>
-
-    <div class="fixed top-4 right-4 z-50">
-        <button id="theme-toggle" class="w-12 h-12 bg-white/80 dark:bg-black/20 rounded-2xl shadow-xl flex items-center justify-center backdrop-blur-md border border-white/20 ripple">
-            <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15a5 5 0 100-10 5 5 0 000 10zM10 0a1 1 0 011 1v2a1 1 0 11-2 0V1a1 1 0 011-1zM10 17a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM3.515 3.515a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414L3.515 4.93a1 1 0 010-1.414zM13.657 13.657a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414l-1.414-1.414a1 1 0 010-1.414zM0 10a1 1 0 011-1h2a1 1 0 110 2H1a1 1 0 01-1-1zM17 10a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zM3.515 16.485a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414l-1.414 1.414a1 1 0 01-1.414 0zM13.657 6.343a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414L15.07 6.343a1 1 0 01-1.414 0z"></path></svg>
-            <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-        </button>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-4 py-12 md:py-20">
-        <header class="flex flex-col items-center text-center mb-16">
-            <div class="relative mb-8 cursor-pointer" onclick="openModal('856.jpg')">
-                <img src="856.jpg" alt="Logo" class="w-40 h-40 md:w-48 md:h-48 rounded-[40px] shadow-2xl border-4 border-white dark:border-white/10 object-cover">
-            </div>
-            <h1 class="text-5xl font-bold text-m3-light-primary dark:text-m3-dark-primary mb-2">Bánh Cuốn Nóng</h1>
-            <h2 class="text-2xl font-medium opacity-50 uppercase tracking-widest">Bích Cao</h2>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white/40 dark:bg-white/5 rounded-m3-2xl p-4 border border-white/60 dark:border-white/10 m3-card m3-card-interactive shadow-sm">
-                    <a href="https://www.google.com/maps/search/?api=1&query=15+Lê+Lợi+Đắk+Đoa+Gia+Lai" target="_blank" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all">
-                        <div class="bg-m3-light-primary dark:bg-m3-dark-primary text-white p-3 rounded-xl">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-lg">15 Lê Lợi, Đắk Đoa</p>
-                            <p class="text-xs opacity-60">Nhấn xem bản đồ</p>
-                        </div>
-                    </a>
-                    <a href="tel:0917724781" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all mt-2">
-                        <div class="bg-green-600 text-white p-3 rounded-xl">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-black text-xl text-green-700 dark:text-green-400">0917.724.781</p>
-                            <p class="text-xs opacity-60">Nhấn gọi đặt hàng</p>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="bg-m3-light-primary-container/30 dark:bg-m3-dark-primary-container/10 rounded-m3-2xl p-6 border border-m3-light-primary/10 m3-card">
-                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-                        <span class="w-1 h-6 bg-m3-light-primary rounded-full"></span> Thực Đơn
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần nhỏ</span><b class="text-m3-light-primary">15K</b></div>
-                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần vừa</span><b class="text-m3-light-primary">20K</b></div>
-                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần lớn</span><b class="text-m3-light-primary">25K</b></div>
-                        <div class="flex justify-between p-4 bg-m3-light-primary text-white rounded-xl shadow-lg"><b>ĐẶC BIỆT</b><b>30K</b></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div onclick="openModal('851.jpg')" class="sm:col-span-2 rounded-m3-2xl overflow-hidden shadow-xl cursor-zoom-in group border-2 border-white/20">
-                    <img src="851.jpg" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700">
-                </div>
-                <div onclick="openModal('853.jpg')" class="rounded-m3-2xl overflow-hidden shadow-lg cursor-zoom-in group border-2 border-white/20">
-                    <img src="853.jpg" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
-                </div>
-                <div onclick="openModal('852.jpg')" class="rounded-m3-2xl overflow-hidden shadow-lg cursor-zoom-in group border-2 border-white/20">
-                    <img src="852.jpg" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700">
-                </div>
-            </div>
-        </div>
-
-        <footer class="mt-20 text-center opacity-40 text-sm">
-            <p>© 2026 Bánh Cuốn Bích Cao • Đắk Đoa, Gia Lai</p>
-        </footer>
-    </div>
-
-    <div id="image-modal" class="hidden-modal fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md cursor-zoom-out" onclick="closeModal()">
-        <button class="absolute top-6 right-6 text-white bg-white/10 p-3 rounded-full z-[110]" onclick="closeModal()">
-            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-        
-        <div class="max-w-5xl max-h-[90vh] p-4 flex items-center justify-center">
-            <img id="modal-img" src="" alt="Detail" 
-                 class="max-w-full max-h-full rounded-2xl shadow-2xl cursor-default pointer-events-auto" 
-                 onclick="event.stopPropagation()">
-        </div>
-    </div>
-
-    <script>
-        // --- QUẢN LÝ GIAO DIỆN (THEME LOGIC CẢI TIẾN CHO MOBILE) ---
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-        // Hàm an toàn để lấy/lưu thiết lập (Tránh lỗi văng script trên Zalo/Facebook Webview)
-        function getSavedTheme() {
-            try { return localStorage.getItem('color-theme'); } 
-            catch (e) { return null; }
-        }
-        function saveTheme(theme) {
-            try { localStorage.setItem('color-theme', theme); } 
-            catch (e) {}
-        }
-
-        // Hàm cập nhật giao diện trực quan
-        function updateThemeUI(isDark) {
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-                themeToggleLightIcon.classList.remove('hidden');
-                themeToggleDarkIcon.classList.add('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                themeToggleDarkIcon.classList.remove('hidden');
-                themeToggleLightIcon.classList.add('hidden');
-            }
-        }
-
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-        // Hàm gộp kiểm tra và áp dụng theme
-        function checkAndApplyTheme() {
-            const savedTheme = getSavedTheme();
-            if (savedTheme) {
-                updateThemeUI(savedTheme === 'dark');
-            } else {
-                updateThemeUI(systemPrefersDark.matches);
-            }
-        }
-
-        function initTheme() {
-            checkAndApplyTheme();
-
-            // Lắng nghe đổi theme từ hệ thống (Hỗ trợ cả máy tính và thiết bị di động cũ)
-            const handleSystemChange = (e) => {
-                if (!getSavedTheme()) updateThemeUI(e.matches);
-            };
-
-            if (systemPrefersDark.addEventListener) {
-                systemPrefersDark.addEventListener('change', handleSystemChange);
-            } else if (systemPrefersDark.addListener) { // Cứu cánh cho Safari iOS cũ
-                systemPrefersDark.addListener(handleSystemChange);
-            }
-
-            // Khắc phục lỗi Mobile: Cập nhật lại giao diện ngay khi người dùng quay lại tab
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
-                    checkAndApplyTheme();
-                }
-            });
-        }
-
-        // Xử lý sự kiện nút bấm thủ công (hỗ trợ touch tốt hơn)
-        themeToggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const isDarkNow = document.documentElement.classList.contains('dark');
-            const newTheme = !isDarkNow;
-            
-            updateThemeUI(newTheme);
-            saveTheme(newTheme ? 'dark' : 'light');
-        });
-
-        // --- QUẢN LÝ XEM ẢNH (MODAL LOGIC) ---
-        const modal = document.getElementById('image-modal');
-        const modalImg = document.getElementById('modal-img');
-
-        function openModal(src) {
-            modalImg.src = src;
-            modal.classList.remove('hidden-modal');
-            document.body.style.overflow = 'hidden'; // Khóa cuộn trang khi xem ảnh
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden-modal');
-            document.body.style.overflow = '';
-            setTimeout(() => { if(modal.classList.contains('hidden-modal')) modalImg.src = ''; }, 400);
-        }
-
-        // Đóng modal khi chạm ra ngoài hoặc dùng phím
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) closeModal();
-        });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-        // Chạy khởi tạo ngay
-        initTheme();
-    </script>
-</body>
-</html>
+1	<!DOCTYPE html> 
+2	<html lang="vi"> 
+3	<head> 
+4	    <meta charset="UTF-8"> 
+5	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"> 
+6	    <title>Bánh Cuốn Nóng Bích Cao - Đắk Đoa</title> 
+7	    <script src="https://cdn.tailwindcss.com"></script> 
+8	    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"> 
+9	    <script> 
+10	        tailwind.config = { 
+11	            darkMode: 'class', 
+12	            theme: { 
+13	                extend: { 
+14	                    colors: { 
+15	                        'm3-light-primary': '#9c4245', 
+16	                        'm3-light-on-primary': '#ffffff', 
+17	                        'm3-light-primary-container': '#ffdad9', 
+18	                        'm3-light-on-primary-container': '#400208', 
+19	                        'm3-light-surface': '#fffbff', 
+20	                        'm3-light-on-surface': '#201a1a', 
+21	                        'm3-light-surface-variant': '#f4dddd', 
+22	                        'm3-light-outline': '#857372', 
+23	                        'm3-dark-primary': '#ffb3b3', 
+24	                        'm3-dark-on-primary': '#5f131b', 
+25	                        'm3-dark-primary-container': '#7e2a2f', 
+26	                        'm3-dark-on-primary-container': '#ffdad9', 
+27	                        'm3-dark-surface': '#1a1111', 
+28	                        'm3-dark-on-surface': '#ece0df', 
+29	                        'm3-dark-surface-variant': '#534343', 
+30	                        'm3-dark-outline': '#a08c8c', 
+31	                        'facebook-blue': '#1877F2', 
+32	                    }, 
+33	                    borderRadius: { 
+34	                        'm3-xl': '28px', 
+35	                        'm3-2xl': '32px', 
+36	                    } 
+37	                } 
+38	            } 
+39	        } 
+40	    </script> 
+41	    <style> 
+42	        body { 
+43	            font-family: 'Lexend', sans-serif; 
+44	            transition: background-color 0.5s ease; 
+45	            overflow-x: hidden; 
+46	            -webkit-tap-highlight-color: transparent; 
+47	        } 
+48	         
+49	        .m3-bg-ornament { 
+50	            position: fixed; 
+51	            z-index: -1; 
+52	            filter: blur(80px); 
+53	            border-radius: 100%; 
+54	            opacity: 0.5; 
+55	            pointer-events: none; 
+56	        } 
+57	         
+58	        .shape-1 { width: 40vw; height: 40vw; top: -10vw; left: -10vw; background: #ffdad9; } 
+59	        .dark .shape-1 { background: #5f131b; opacity: 0.3; } 
+60	        .shape-2 { width: 35vw; height: 35vw; bottom: 5%; right: -5vw; background: #f4dddd; } 
+61	        .dark .shape-2 { background: #7e2a2f; opacity: 0.2; } 
+62	 
+63	        .m3-card { 
+64	            transition: all 0.4s cubic-bezier(0.2, 0, 0, 1); 
+65	            backdrop-filter: blur(16px); 
+66	            -webkit-backdrop-filter: blur(16px); 
+67	        } 
+68	         
+69	        @media (min-width: 768px) { 
+70	            .m3-card-interactive:hover { 
+71	                transform: translateY(-8px) scale(1.01); 
+72	                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15); 
+73	            } 
+74	        } 
+75	 
+76	        .ripple { position: relative; overflow: hidden; } 
+77	        .ripple:active:after { content: ""; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(255,255,255,0.2); } 
+78	 
+79	        /* Lightbox Fix */ 
+80	        #image-modal { 
+81	            transition: opacity 0.3s ease; 
+82	            display: flex; 
+83	        } 
+84	        #modal-img { 
+85	            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+86	        } 
+87	        .hidden-modal { 
+88	            opacity: 0 !important; 
+89	            visibility: hidden !important; 
+90	            pointer-events: none !important; 
+91	        } 
+92	        .hidden-modal #modal-img { 
+93	            transform: scale(0.8); 
+94	        } 
+95	 
+96	        @keyframes floating { 
+97	            0%, 100% { transform: translateY(0px); } 
+98	            50% { transform: translateY(-10px); } 
+99	        } 
+100	        .animate-floating { animation: floating 3s ease-in-out infinite; } 
+101	    </style> 
+102	</head> 
+103	<body class="bg-m3-light-surface dark:bg-m3-dark-surface text-m3-light-on-surface dark:text-m3-dark-on-surface min-h-screen"> 
+104	 
+105	    <div class="m3-bg-ornament shape-1"></div> 
+106	    <div class="m3-bg-ornament shape-2"></div> 
+107	 
+108	    <!-- Facebook Floating Button --> 
+109	    <div class="fixed bottom-6 right-6 z-[60] pointer-events-none"> 
+110	        <a href="https://www.facebook.com/banh.cuon.nong.bich.cao/" target="_blank" class="pointer-events-auto bg-facebook-blue text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 animate-floating ripple"> 
+111	            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"> 
+112	                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/> 
+113	            </svg> 
+114	        </a> 
+115	    </div> 
+116	 
+117	    <!-- Theme Switcher --> 
+118	    <div class="fixed top-4 right-4 z-50"> 
+119	        <button id="theme-toggle" class="w-12 h-12 bg-white/80 dark:bg-black/20 rounded-2xl shadow-xl flex items-center justify-center backdrop-blur-md border border-white/20 ripple"> 
+120	            <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15a5 5 0 100-10 5 5 0 000 10zM10 0a1 1 0 011 1v2a1 1 0 11-2 0V1a1 1 0 011-1zM10 17a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM3.515 3.515a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414L3.515 4.93a1 1 0 010-1.414zM13.657 13.657a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414l-1.414-1.414a1 1 0 010-1.414zM0 10a1 1 0 011-1h2a1 1 0 110 2H1a1 1 0 01-1-1zM17 10a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zM3.515 16.485a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414l-1.414 1.414a1 1 0 01-1.414 0zM13.657 6.343a1 1 0 010-1.414l1.414-1.414a1 1 0 111.414 1.414L15.07 6.343a1 1 0 01-1.414 0z"></path></svg> 
+121	            <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg> 
+122	        </button> 
+123	    </div> 
+124	 
+125	    <!-- Main Content --> 
+126	    <div class="max-w-6xl mx-auto px-4 py-12 md:py-20"> 
+127	        <header class="flex flex-col items-center text-center mb-16"> 
+128	            <div class="relative mb-8 cursor-pointer" onclick="openModal('856.jpg')"> 
+129	                <img src="856.jpg" alt="Logo" class="w-40 h-40 md:w-48 md:h-48 rounded-[40px] shadow-2xl border-4 border-white dark:border-white/10 object-cover"> 
+130	            </div> 
+131	            <h1 class="text-5xl font-bold text-m3-light-primary dark:text-m3-dark-primary mb-2">Bánh Cuốn Nóng</h1> 
+132	            <h2 class="text-2xl font-medium opacity-50 uppercase tracking-widest">Bích Cao</h2> 
+133	        </header> 
+134	 
+135	        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8"> 
+136	            <div class="lg:col-span-5 space-y-6"> 
+137	                <!-- Info Section --> 
+138	                <div class="bg-white/40 dark:bg-white/5 rounded-m3-2xl p-4 border border-white/60 dark:border-white/10 m3-card m3-card-interactive shadow-sm"> 
+139	                    <a href="https://www.google.com/maps/search/?api=1&query=15+Lê+Lợi+Đắk+Đoa+Gia+Lai" target="_blank" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all"> 
+140	                        <div class="bg-m3-light-primary dark:bg-m3-dark-primary text-white p-3 rounded-xl"> 
+141	                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg> 
+142	                        </div> 
+143	                        <div> 
+144	                            <p class="font-bold text-lg">15 Lê Lợi, Đắk Đoa</p> 
+145	                            <p class="text-xs opacity-60">Nhấn xem bản đồ</p> 
+146	                        </div> 
+147	                    </a> 
+148	                    <a href="tel:0917724781" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all mt-2"> 
+149	                        <div class="bg-green-600 text-white p-3 rounded-xl"> 
+150	                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg> 
+151	                        </div> 
+152	                        <div> 
+153	                            <p class="font-black text-xl text-green-700 dark:text-green-400">0917.724.781</p> 
+154	                            <p class="text-xs opacity-60">Nhấn gọi đặt hàng</p> 
+155	                        </div> 
+156	                    </a> 
+157	                </div> 
+158	 
+159	                <!-- Menu Section --> 
+160	                <div class="bg-m3-light-primary-container/30 dark:bg-m3-dark-primary-container/10 rounded-m3-2xl p-6 border border-m3-light-primary/10 m3-card"> 
+161	                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2"> 
+162	                        <span class="w-1 h-6 bg-m3-light-primary rounded-full"></span> Thực Đơn 
+163	                    </h3> 
+164	                    <div class="space-y-3"> 
+165	                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần nhỏ</span><b class="text-m3-light-primary">15K</b></div> 
+166	                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần vừa</span><b class="text-m3-light-primary">20K</b></div> 
+167	                        <div class="flex justify-between p-3 bg-white/60 dark:bg-black/20 rounded-xl"><span>Phần lớn</span><b class="text-m3-light-primary">25K</b></div> 
+168	                        <div class="flex justify-between p-4 bg-m3-light-primary text-white rounded-xl shadow-lg"><b>ĐẶC BIỆT</b><b>30K</b></div> 
+169	                    </div> 
+170	                </div> 
+171	            </div> 
+172	 
+173	            <!-- Photos Section --> 
+174	            <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4"> 
+175	                <div onclick="openModal('851.jpg')" class="sm:col-span-2 rounded-m3-2xl overflow-hidden shadow-xl cursor-zoom-in group border-2 border-white/20"> 
+176	                    <img src="851.jpg" class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700"> 
+177	                </div> 
+178	                <div onclick="openModal('853.jpg')" class="rounded-m3-2xl overflow-hidden shadow-lg cursor-zoom-in group border-2 border-white/20"> 
+179	                    <img src="853.jpg" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"> 
+180	                </div> 
+181	                <div onclick="openModal('852.jpg')" class="rounded-m3-2xl overflow-hidden shadow-lg cursor-zoom-in group border-2 border-white/20"> 
+182	                    <img src="852.jpg" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"> 
+183	                </div> 
+184	            </div> 
+185	        </div> 
+186	 
+187	        <footer class="mt-20 text-center opacity-40 text-sm"> 
+188	            <p>© 2026 Bánh Cuốn Bích Cao • Đắk Đoa, Gia Lai</p> 
+189	        </footer> 
+190	    </div> 
+191	 
+192	    <!-- Lightbox Modal --> 
+193	    <div id="image-modal" class="hidden-modal fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md cursor-zoom-out" onclick="closeModal()"> 
+194	        <!-- Close button (always visible and clickable) --> 
+195	        <button class="absolute top-6 right-6 text-white bg-white/10 p-3 rounded-full z-[110]" onclick="closeModal()"> 
+196	            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> 
+197	        </button> 
+198	         
+199	        <!-- Image with stopPropagation to prevent closing when clicked --> 
+200	        <div class="max-w-5xl max-h-[90vh] p-4 flex items-center justify-center"> 
+201	            <img id="modal-img" src="" alt="Detail"  
+202	                 class="max-w-full max-h-full rounded-2xl shadow-2xl cursor-default pointer-events-auto"  
+203	                 onclick="event.stopPropagation()"> 
+204	        </div> 
+205	    </div> 
+206	 
+207	    <script> 
+208	        const themeToggleBtn = document.getElementById('theme-toggle'); 
+209	        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon'); 
+210	        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon'); 
+211	        const modal = document.getElementById('image-modal'); 
+212	        const modalImg = document.getElementById('modal-img'); 
+213	 
+214	        // Theme Logic 
+215	        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
+216	            document.documentElement.classList.add('dark'); 
+217	            themeToggleLightIcon.classList.remove('hidden'); 
+218	        } else { 
+219	            document.documentElement.classList.remove('dark'); 
+220	            themeToggleDarkIcon.classList.remove('hidden'); 
+221	        } 
+222	 
+223	        themeToggleBtn.addEventListener('click', function() { 
+224	            themeToggleDarkIcon.classList.toggle('hidden'); 
+225	            themeToggleLightIcon.classList.toggle('hidden'); 
+226	            document.documentElement.classList.toggle('dark'); 
+227	            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); 
+228	        }); 
+229	 
+230	        // Modal Logic 
+231	        function openModal(src) { 
+232	            modalImg.src = src; 
+233	            modal.classList.remove('hidden-modal'); 
+234	            document.body.style.overflow = 'hidden'; 
+235	        } 
+236	 
+237	        function closeModal() { 
+238	            modal.classList.add('hidden-modal'); 
+239	            document.body.style.overflow = ''; 
+240	            setTimeout(() => { if(modal.classList.contains('hidden-modal')) modalImg.src = ''; }, 400); 
+241	        } 
+242	 
+243	        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); }); 
+244	    </script> 
+245	</body> 
+246	</html> 
+247	 
+248	 
