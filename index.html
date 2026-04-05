@@ -44,7 +44,6 @@
             align-items: flex-end;
         }
 
-        /* Hiệu ứng mở mượt mà cho chat window */
         #chat-window { 
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform-origin: bottom right;
@@ -64,7 +63,6 @@
         @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .animate-floating { animation: floating 3s ease-in-out infinite; }
 
-        /* Badge "TƯ VẤN AI" */
         .ai-badge {
             position: absolute;
             right: 80px;
@@ -95,8 +93,12 @@
         .dark .ai-badge { background: #2d1a1a; color: #ffb3b3; border-color: rgba(255, 179, 179, 0.2); }
         .dark .ai-badge::after { border-left-color: #2d1a1a; }
 
-        /* Tối ưu hóa vùng kéo thả cho Mobile */
         .drag-handle { cursor: move; touch-action: none; }
+
+        .dot { animation: dot-blink 1.4s infinite both; }
+        .dot:nth-child(2) { animation-delay: .2s; }
+        .dot:nth-child(3) { animation-delay: .4s; }
+        @keyframes dot-blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
     </style>
 </head>
 <body class="bg-m3-light-surface dark:bg-m3-dark-surface text-m3-light-on-surface dark:text-m3-dark-on-surface min-h-screen">
@@ -106,10 +108,8 @@
 
     <!-- AI Chatbox Wrapper -->
     <div id="ai-chat-wrapper" class="chat-container">
-        
         <!-- Chat Window -->
         <div id="chat-window" class="closed mb-4 w-[320px] sm:w-[380px] h-[500px] bg-white dark:bg-m3-dark-surface border border-m3-light-primary/20 dark:border-white/10 rounded-m3-2xl shadow-2xl overflow-hidden flex flex-col">
-            <!-- Header (Drag Handle) -->
             <div class="bg-m3-light-primary dark:bg-m3-dark-primary p-4 text-white flex justify-between items-center drag-handle">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -129,25 +129,22 @@
                 </button>
             </div>
             
-            <!-- Messages Area -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-black/20">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-black/20 flex flex-col">
                 <div class="chat-bubble-ai bg-white dark:bg-white/10 p-3 shadow-sm border border-black/5 dark:border-white/5 max-w-[85%] text-sm leading-relaxed">
                     Chào bạn! Bích Cao AI có thể giúp gì cho bạn hôm nay? Bạn có thể hỏi về thực đơn hoặc cách thức đặt hàng nhé!
                 </div>
             </div>
 
-            <!-- Input Area -->
             <div class="p-4 bg-white dark:bg-m3-dark-surface border-t border-black/5 dark:border-white/10">
                 <form id="chat-form" class="flex gap-2">
                     <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." class="flex-1 bg-slate-100 dark:bg-white/5 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-m3-light-primary outline-none">
-                    <button type="submit" class="bg-m3-light-primary text-white p-2 rounded-xl hover:scale-105 active:scale-95 transition-transform shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    <button type="submit" id="chat-send-btn" class="bg-m3-light-primary text-white p-2 rounded-xl hover:scale-105 active:scale-95 transition-transform shadow-lg disabled:opacity-50">
+                        <svg id="send-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- Floating Robot Button -->
         <div class="relative flex items-center justify-end w-full">
             <div id="ai-label" class="ai-badge">TƯ VẤN AI</div>
             <button id="chat-toggle-btn" onclick="toggleChat()" class="bg-m3-light-primary dark:bg-m3-dark-primary text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all animate-floating z-50">
@@ -173,6 +170,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <!-- Sidebar Info -->
             <div class="lg:col-span-5 space-y-6">
+                <!-- Phone Info -->
                 <div class="bg-white/40 dark:bg-white/5 rounded-m3-2xl p-2 border border-white/60 dark:border-white/10 m3-card">
                     <a href="tel:0917724781" class="flex items-center space-x-4 p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all">
                         <div class="bg-green-600 text-white p-3 rounded-xl shadow-lg">
@@ -185,6 +183,23 @@
                     </a>
                 </div>
 
+                <!-- Facebook Profile Card - Compact Version -->
+                <div class="bg-white/40 dark:bg-white/5 rounded-m3-2xl p-4 border border-white/60 dark:border-white/10 m3-card">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center text-white shadow-md">
+                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-sm">Kết nối Facebook</h3>
+                            <p class="text-[10px] opacity-60 truncate">Xem ảnh & nhắn tin trực tiếp</p>
+                        </div>
+                        <a href="https://www.facebook.com/banh.cuon.nong.bich.cao" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all shadow-sm active:scale-95">
+                            Truy cập
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Menu Info -->
                 <div class="bg-m3-light-primary-container/30 dark:bg-m3-dark-primary-container/10 rounded-m3-2xl p-6 border border-m3-light-primary/10 m3-card">
                     <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
                         <span class="w-1.5 h-6 bg-m3-light-primary rounded-full"></span>
@@ -240,10 +255,41 @@
         const modalImg = document.getElementById('modal-img');
         const toggleBtn = document.getElementById('chat-toggle-btn');
         const aiLabel = document.getElementById('ai-label');
+        const chatSendBtn = document.getElementById('chat-send-btn');
 
-        // Phân biệt Click và Drag để không làm mất mượt mà
-        let isMoving = false;
-        let startX, startY;
+        const apiKey = ""; 
+        const geminiModel = "gemini-2.5-flash-preview-09-2025";
+        const systemPrompt = `Bạn là Bích Cao AI - trợ lý ảo vui vẻ, nhiệt tình của tiệm Bánh Cuốn Nóng Bích Cao tại Đắk Đoa. 
+Thực đơn của tiệm gồm: Phần nhỏ (15k), Phần vừa (20k), Phần lớn (25k) và Đặc biệt (30k). 
+Món đặc trưng là Bánh cuốn nóng ăn kèm thịt heo quay giòn da. 
+Số điện thoại đặt hàng: 0917.724.781. 
+Facebook cá nhân: facebook.com/banh.cuon.nong.bich.cao.
+Hãy trả lời ngắn gọn, thân thiện, sử dụng các emoji phù hợp. Luôn mời khách gọi hotline hoặc nhắn tin facebook để đặt hàng nhanh nhất.`;
+
+        async function getGeminiResponse(userQuery) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            const maxRetries = 5;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Dạ, em chưa hiểu ý bạn lắm, bạn gọi hotline 0917.724.781 để được hỗ trợ trực tiếp nhé!";
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                }
+            }
+        }
 
         function toggleChat() {
             const isClosed = chatWindow.classList.contains('closed');
@@ -262,18 +308,11 @@
             }
         }
 
-        // Logic Dragging tối ưu
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
+        let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0, isMoving = false;
 
         wrapper.addEventListener("touchstart", dragStart, {passive: false});
         wrapper.addEventListener("touchend", dragEnd, {passive: false});
         wrapper.addEventListener("touchmove", drag, {passive: false});
-
         wrapper.addEventListener("mousedown", dragStart);
         wrapper.addEventListener("mouseup", dragEnd);
         wrapper.addEventListener("mousemove", drag);
@@ -286,13 +325,10 @@
                 initialX = e.clientX - xOffset;
                 initialY = e.clientY - yOffset;
             }
-
-            if (e.target.closest(".drag-handle") || e.target === toggleBtn) {
-                isMoving = true;
-            }
+            if (e.target.closest(".drag-handle") || e.target === toggleBtn) isMoving = true;
         }
 
-        function dragEnd(e) {
+        function dragEnd() {
             initialX = currentX;
             initialY = currentY;
             isMoving = false;
@@ -308,10 +344,8 @@
                     currentX = e.clientX - initialX;
                     currentY = e.clientY - initialY;
                 }
-
                 xOffset = currentX;
                 yOffset = currentY;
-
                 setTranslate(currentX, currentY, wrapper);
             }
         }
@@ -320,24 +354,36 @@
             el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
         }
 
-        // Chat logic
-        chatForm.onsubmit = (e) => {
+        chatForm.onsubmit = async (e) => {
             e.preventDefault();
             const val = chatInput.value.trim();
             if (!val) return;
+
             addMessage(val, false);
             chatInput.value = '';
-            
-            // Giả lập AI phản hồi
-            setTimeout(() => {
-                const aiResponses = [
-                    "Bích Cao có các phần từ 15k đến 30k. Bạn muốn đặt phần nào ạ?",
-                    "Thịt heo quay bên mình luôn giòn da và nóng hổi mỗi ngày!",
-                    "Dạ, bạn có thể gọi hotline 0917.724.781 để được giao hàng nhanh nhất ạ."
-                ];
-                const randomResp = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-                addMessage(randomResp, true);
-            }, 800);
+            chatInput.disabled = true;
+            chatSendBtn.disabled = true;
+
+            const loadingId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = loadingId;
+            loadingDiv.className = 'chat-bubble-ai bg-white dark:bg-white/10 p-3 shadow-sm border border-black/5 dark:border-white/5 max-w-[85%] text-sm self-start flex gap-1';
+            loadingDiv.innerHTML = '<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await getGeminiResponse(val);
+                document.getElementById(loadingId).remove();
+                addMessage(response, true);
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                addMessage("Xin lỗi bạn, kết nối của em đang gặp chút vấn đề. Bạn vui lòng gọi hotline 0917.724.781 để tiệm phục vụ ngay nhé!", true);
+            } finally {
+                chatInput.disabled = false;
+                chatSendBtn.disabled = false;
+                chatInput.focus();
+            }
         };
 
         function addMessage(text, isAi) {
@@ -348,7 +394,6 @@
             div.textContent = text;
             chatMessages.appendChild(div);
             
-            // Animation cho tin nhắn mới
             setTimeout(() => {
                 div.classList.remove('opacity-0', 'translate-y-4');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
