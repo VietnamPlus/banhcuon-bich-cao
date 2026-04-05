@@ -92,11 +92,6 @@
             border-bottom: 5px solid transparent;
             border-left: 6px solid white;
         }
-        
-        .dot { animation: dot-blink 1.4s infinite both; }
-        .dot:nth-child(2) { animation-delay: .2s; }
-        .dot:nth-child(3) { animation-delay: .4s; }
-        @keyframes dot-blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
 
         /* Custom Scrollbar */
         #chat-messages::-webkit-scrollbar { width: 4px; }
@@ -136,15 +131,15 @@
             <!-- Messages Area -->
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-black/20 flex flex-col">
                 <div class="chat-bubble-ai bg-white dark:bg-white/10 p-3 shadow-sm border border-black/5 dark:border-white/5 max-w-[85%] text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-200">
-                    Chào bạn! Em là trợ lý AI của tiệm Bích Cao. Bạn cần xem menu hay đặt hàng ạ? 🥟
+                    Chào bạn! Trợ lý AI có thể giúp bạn xem báo giá, tìm chỉ đường hoặc liên hệ đặt món. Bạn cần thông tin gì ạ? 🥟📞
                 </div>
             </div>
 
             <!-- Input Area -->
             <div class="p-3 bg-white dark:bg-[#1a1111] border-t border-black/5 dark:border-white/10 shrink-0">
                 <form id="chat-form" class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Hỏi AI về món ăn..." class="flex-1 bg-slate-100 dark:bg-white/5 border-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-m3-light-primary outline-none dark:text-white">
-                    <button type="submit" id="chat-send-btn" class="bg-m3-light-primary text-white p-2.5 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-md disabled:opacity-50">
+                    <input type="text" id="chat-input" placeholder="Hỏi giá, địa chỉ, facebook..." class="flex-1 bg-slate-100 dark:bg-white/5 border-none rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-m3-light-primary outline-none dark:text-white">
+                    <button type="submit" id="chat-send-btn" class="bg-m3-light-primary text-white p-2.5 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-md">
                         <svg id="send-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
                 </form>
@@ -153,7 +148,7 @@
 
         <!-- Floating Button -->
         <div class="relative flex items-center justify-end">
-            <div id="ai-label" class="ai-badge">TƯ VẤN AI</div>
+            <div id="ai-label" class="ai-badge">TƯ VẤN</div>
             <button id="chat-toggle-btn" onclick="toggleChat()" class="bg-m3-light-primary dark:bg-m3-dark-primary text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all animate-floating">
                 <svg id="toggle-icon-bot" class="w-8 h-8 sm:w-10 sm:h-10 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="11" width="18" height="10" rx="2"></rect>
@@ -214,7 +209,7 @@
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </div>
                         <div>
-                            <h3 class="font-bold text-sm leading-tight">Facebook Fanpage</h3>
+                            <h3 class="font-bold text-sm leading-tight">Facebook Bích Cao</h3>
                             <p class="text-[10px] opacity-50">Nhắn tin trực tiếp</p>
                         </div>
                     </div>
@@ -283,40 +278,6 @@
         const aiLabel = document.getElementById('ai-label');
         const toggleIconBot = document.getElementById('toggle-icon-bot');
 
-        const apiKey = ""; // API key tự động được cung cấp tại runtime
-        const model = "gemini-2.5-flash-preview-09-2025";
-        const systemPrompt = `Bạn là Bích Cao AI, trợ lý vui vẻ của tiệm Bánh Cuốn Bích Cao tại Đắk Đoa.
-        Thông tin tiệm:
-        - Địa chỉ: 15 Lê Lợi, TT. Đắk Đoa, Gia Lai.
-        - Đặc sản: Bánh cuốn nóng heo quay giòn da.
-        - Giá: Nhỏ 15k, Vừa 20k, Lớn 25k, Đặc biệt 30k.
-        - Hotline: 0917.724.781.
-        - Trả lời bằng tiếng Việt, ngắn gọn, dùng emoji 🥟🔥🐷. Luôn gợi ý khách gọi hotline để đặt hàng nhanh nhất.`;
-
-        async function fetchGemini(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error('API Error');
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-                } catch (e) {
-                    if (i === 4) return "Dạ, hiện tại em hơi bận xíu, anh/chị gọi hotline 0917.724.781 để em tư vấn ngay nhé! 📞";
-                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
-                }
-            }
-        }
-
         function toggleChat() {
             const isOpen = !chatWindow.classList.contains('closed');
             if (isOpen) {
@@ -333,23 +294,32 @@
             }
         }
 
-        chatForm.addEventListener('submit', async (e) => {
+        chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const text = chatInput.value.trim();
+            const text = chatInput.value.trim().toLowerCase();
             if (!text) return;
 
-            addMsg(text, false);
+            // Thêm tin nhắn của khách
+            addMsg(chatInput.value, false);
             chatInput.value = '';
             
-            const loading = document.createElement('div');
-            loading.className = 'chat-bubble-ai bg-white dark:bg-white/10 p-3 self-start text-xs flex gap-1 items-center italic text-slate-400';
-            loading.innerHTML = 'AI đang trả lời <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
-            chatMessages.appendChild(loading);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Xử lý câu trả lời thông minh dựa trên từ khóa
+            let response = "";
+            if (text.includes("giá") || text.includes("bao nhiêu") || text.includes("menu")) {
+                response = "Dạ, menu nhà em có các phần: Nhỏ 15k, Vừa 20k, Lớn 25k và Đặc biệt 30k. Mời bạn chọn ạ! 🥟";
+            } else if (text.includes("địa chỉ") || text.includes("ở đâu") || text.includes("chỉ đường")) {
+                response = "Tiệm Bích Cao ở 15 Lê Lợi, TT. Đắk Đoa. Bạn có thể bấm vào mục 'CHỈ ĐƯỜNG' phía trên để mở Google Maps nhé! 📍";
+            } else if (text.includes("facebook") || text.includes("nhắn tin") || text.includes("fb")) {
+                response = "Bạn vui lòng bấm vào mục 'Facebook Bánh Cuốn Nóng' ở bên trên để nhắn tin trực tiếp cho tiệm qua Messenger nhé! 💙";
+            } else if (text.includes("gọi") || text.includes("sđt") || text.includes("điện thoại") || text.includes("đặt hàng")) {
+                response = "Bạn hãy bấm vào mục '0917.724.781' màu xanh bên trên để thực hiện cuộc gọi đặt hàng nhanh nhất ạ! 📞";
+            } else {
+                response = "Dạ, Trợ lý AI đã nhận thông tin. Bạn cần xem giá món, tìm đường hay nhắn tin Facebook cho tiệm ạ? 🥟🔥";
+            }
 
-            const res = await fetchGemini(text);
-            loading.remove();
-            addMsg(res, true);
+            setTimeout(() => {
+                addMsg(response, true);
+            }, 500);
         });
 
         function addMsg(text, isAi) {
